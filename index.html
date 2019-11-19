@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/shaka-player/2.5.6/shaka-player.compiled.debug.js"></script>
+  </head>
+
+  <body>
+    <h1>Test of seek backwards in shaka player.</h1>
+    <p>Serve from a local server, e.g. 'web server for chrome'</p>
+    <p>Direct playback from Github seems to work, but locally served 10s segments, using 'Bad Reverse' stalls immediately, and ir pause then 'Bad Reverse', at 40s (when it needs to load a new segment going backwards)</p>
+    <p>What it seems to do is go into a 'clear buffers' frenzy.  Since it does not fail for remote serving, it is likely a time race condition.</p>
+    <br/>
+    <p>'Good Reverse' avoids the issue by NOT seeking if either (video or audio) of the mediastate.performingUpdate is true</p>
+    <p>2 second segments also seem to work better than 10</p>
+    <a href="testdashshaka_rev.html">10 second segments</a>
+    <br/>
+    <a href="testdashshaka_rev2.html">2 second segments</a>
+  </body>
+</hmtl>
+ 

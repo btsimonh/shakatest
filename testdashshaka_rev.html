@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/shaka-player/2.5.6/shaka-player.compiled.debug.js"></script>
+  </head>
+
+  <body>
+    <video controls data-shaka-player id="video">
+    </video>
+    <div>
+      <button id="play" onclick="myclick(event)">Play</button>
+      <button id="pause" onclick="myclick(event)">Pause</button>
+      <button id="back" onclick="myclick(event)">Back</button>
+      <button id="fwd" onclick="myclick(event)">Fwd</button>
+      <button id="reverse" onclick="myclick(event)">Good Reverse</button>
+      <button id="badreverse" onclick="myclick(event)">Bad Reverse</button>
+    </div>
+    <script>
+        var video;
+        var player;
+
+var manifestUri = 'media/neb10.mpd'; // unencrypted dash webm
+
+function initApp() {
+  // Install built-in polyfills to patch browser incompatibilities.
+  shaka.polyfill.installAll();
+
+  // Check to see if the browser supports the basic APIs Shaka needs.
+  if (shaka.Player.isBrowserSupported()) {
+    // Everything looks good!
+    initPlayer();
+  } else {
+    // This browser does not have the minimum set of APIs we need.
+    console.error('Browser not supported!');
+  }
+}
+
+function initPlayer() {
+  // Create a Player instance.
+  video = document.getElementById('video');
+  player = new shaka.Player(video);
+
+  // Attach player to the window to make it easy to access in the JS console.
+  window.player = player;
+
+  // Listen for error events.
+  player.addEventListener('error', onErrorEvent);
+
+  var config = {
+    abr: {
+      enabled:false,
+    },
+  };
+  
+  
+  player.configure(config);
+  
+  // Try to load a manifest.
+  // This is an asynchronous process.
+  player.load(manifestUri).then(function() {
+    // This runs if the asynchronous load is successful.
+    console.log('The video has now been loaded!');    
+  }).catch(onError);  // onError is executed if the asynchronous load fails.
+
+  
+}
+
+function onErrorEvent(event) {
+  // Extract the shaka.util.Error object from the event.
+  onError(event.detail);
+}
+
+function onError(error) {
+  // Log the error.
+  console.error('Error code', error.code, 'object', error);
+}
+
+var myInterval = null;
+        function myclick(ev){
+          switch(ev.target.id){
+            case 'play':
+              if (myInterval) {
+                clearInterval(myInterval);
+                myInterval = null;
+              }
+              video.play();
+              break;
+            case 'pause':
+              if (myInterval) {
+                clearInterval(myInterval);
+                myInterval = null;
+              }
+              video.pause();
+              break;
+            case 'fwd':
+              if (myInterval) {
+                clearInterval(myInterval);
+                myInterval = null;
+              }
+              video.currentTime += 0.04;
+              break;
+            case 'back':
+              if (myInterval) {
+                clearInterval(myInterval);
+                myInterval = null;
+              }
+              video.currentTime -= 0.04;
+              break;
+            case 'reverse':
+              if (myInterval) {
+                clearInterval(myInterval);
+                myInterval = null;
+              }
+              var start = 60;
+              myInterval = setInterval( ()=> {
+                  if(start > 0){
+                    console.log("#### now "+video.currentTime+" -> "+start);
+                    if ((player.streamingEngine_.mediaStates_.get('video').clearingBuffer) || 
+                        (player.streamingEngine_.mediaStates_.get('audio').clearingBuffer) || 
+                        (player.streamingEngine_.mediaStates_.get('video').performingUpdate) ||
+                        (player.streamingEngine_.mediaStates_.get('audio').performingUpdate) 
+                        ) {
+                      console.log("noseek - clearing buffers still");
+                    } else {
+                      video.currentTime = start;
+                    }
+                    start -= 0.1;
+                  } else {
+                    start = 60;
+                  }
+                  
+                }, 100);
+              break;
+            case 'badreverse':
+              if (myInterval) {
+                clearInterval(myInterval);
+                myInterval = null;
+              }
+              var start = 60;
+              myInterval = setInterval( ()=> {
+                  if(start > 0){
+                    console.log("#### now "+video.currentTime+" -> "+start);
+                    video.currentTime = start;
+                    start -= 0.1;
+                  } else {
+                    start = 60;
+                  }
+                  
+                }, 100);
+              break;
+          }
+        }
+        
+    document.addEventListener("DOMContentLoaded", function () {
+        initApp();
+    });        
+    </script>
+  </body>
+</html>
