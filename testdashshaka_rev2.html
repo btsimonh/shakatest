@@ -14,6 +14,7 @@
       <button id="fwd" onclick="myclick(event)">Fwd</button>
       <button id="reverse" onclick="myclick(event)">Good Reverse</button>
       <button id="badreverse" onclick="myclick(event)">Bad Reverse</button>
+      <button id="stopreverse" onclick="myclick(event)">Stop Reverse</button>
     </div>
     <script>
         var video;
@@ -147,6 +148,12 @@ var myInterval = null;
                   }
                   
                 }, 100);
+              break;
+            case 'stopreverse':
+              if (myInterval) {
+                clearInterval(myInterval);
+                myInterval = null;
+              }
               break;
           }
         }
