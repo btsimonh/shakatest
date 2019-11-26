@@ -4,12 +4,13 @@ Uses: 2.5.6/shaka-player.compiled.debug.js
 
 ## Test of seek backwards in shaka player.
 
-This repo is to demonstrate a seeking issue in Shaka player where when seeking backwards or forwards into a new segment and seeking again quickly, the video stalls.
+This repo is to demonstrate a seeking issue in Shaka player where when seeking backwards, if the seeked time is within smallGapLimit before the start of the first loaded segment, the seek does not complete, but currentTime is updated.
+
+In these test pages, smallGapLimit is set unreasonably large to easily demonstrate the issue (9s for the 10s segment version, 1.9s for the 2s segment version).
 
 ## instructions:
-Serve from a local server, e.g. 'web server for chrome'
-Direct playback from Github seems to work, but locally served 10s segments, using 'Bad Reverse' stalls immediately, and ir pause then 'Bad Reverse', at 40s (when it needs to load a new segment going backwards)
-What it seems to do is go into a 'clear buffers' frenzy.  Since it does not fail for remote serving, it is likely a time race condition.
+Seek manually to ~1 minute.
+Use Arrow left to seek back by 1s increments until the video stops responding.
+Note that the time changes, but the buffer indication on the timeline shows no data has been loaded.
+The time range covered by the video not responding corresponds to the value of smallGapLimit.
 
-'Good Reverse' avoids the issue by NOT seeking if either (video or audio) of the mediastate.performingUpdate is true
-2 second segments also seem to work better than 10

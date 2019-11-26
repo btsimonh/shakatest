@@ -12,9 +12,9 @@
       <button id="pause" onclick="myclick(event)">Pause</button>
       <button id="back" onclick="myclick(event)">Back</button>
       <button id="fwd" onclick="myclick(event)">Fwd</button>
-      <button id="reverse" onclick="myclick(event)">Good Reverse</button>
+      <!--<button id="reverse" onclick="myclick(event)">Good Reverse</button>
       <button id="badreverse" onclick="myclick(event)">Bad Reverse</button>
-      <button id="stopreverse" onclick="myclick(event)">Stop Reverse</button>
+      <button id="stopreverse" onclick="myclick(event)">Stop Reverse</button>-->
     </div>
     <script>
         var video;
@@ -51,6 +51,9 @@ function initPlayer() {
     abr: {
       enabled:false,
     },
+    streaming:{
+      smallGapLimit:1.8,
+    }
   };
   
   
@@ -107,7 +110,7 @@ var myInterval = null;
               }
               video.currentTime -= 0.04;
               break;
-            case 'reverse':
+/*            case 'reverse':
               if (myInterval) {
                 clearInterval(myInterval);
                 myInterval = null;
@@ -155,6 +158,7 @@ var myInterval = null;
                 myInterval = null;
               }
               break;
+*/              
           }
         }
         
