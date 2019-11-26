@@ -1,5 +1,7 @@
 # A Shaka Player . test page with media.
 
+# **** NOTE: Seems git may corrupt the media - so if you have trouble, download as a zip ****
+
 Uses: 2.5.6/shaka-player.compiled.debug.js
 
 ## Test of seek backwards in shaka player.
